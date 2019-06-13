@@ -41,24 +41,10 @@ let rec pp_indent = function
 let rec pp_element indent el =
   pp_indent indent ^
   match el with
-  (* Ex: <h1>Hello World!</h1> *)
   | Element(tag, [], [Content s]) -> "<" ^ tag ^ ">" ^ s ^ "</" ^ tag ^ ">"
-  (* Ex:
-    <div>
-      <h1>Hello World!</h1>
-    </div>
-  *)
   | Element(tag, [], eles) -> "<" ^ tag ^ ">\n" ^ pp_elements (indent + 2) eles ^"\n" ^ pp_indent indent ^ "</" ^ tag ^ ">"
-  (* Ex: <img src="blah.png" /> *)
   | Element(tag, attrs, []) -> "<" ^ tag ^ " " ^ pp_attributes attrs ^ "/>"
-  (* Ex:
-    <div class= "col-sm-12">
-      <h1>Hello World!</h1>
-      <img src= "../images/dog.png"/>
-    </div>
-  *)
   | Element(tag, attrs, eles) -> "<" ^ tag ^ " " ^ pp_attributes attrs ^ ">\n" ^ pp_elements (indent + 2) eles ^"\n" ^ pp_indent indent ^ "</" ^ tag ^ ">"
-  (* Ex: Hello World! *)
   | Content(str) -> str
 
 and pp_elements indent eles = String.concat "\n" @@ List.map (pp_element indent) eles
